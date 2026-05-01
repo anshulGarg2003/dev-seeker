@@ -64,6 +64,23 @@ const NewUserSchema = new mongoose.Schema(
     friendsRequests: [friendSchema],
     friendsRequestSend: [friendSchema],
     notification: [notificationSchema],
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "NewUser",
+      },
+    ],
+    following: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "NewUser",
+      },
+    ],
+    badges: [
+      {
+        type: String,
+      },
+    ],
     bio: {
       type: String,
     },
@@ -115,6 +132,18 @@ const NewUserSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "NewRoom", // Ensure this references the NewRoom model
+      },
+    ],
+    activity: [
+      {
+        date: {
+          type: String, // "YYYY-MM-DD"
+          required: true,
+        },
+        count: {
+          type: Number,
+          default: 1,
+        },
       },
     ],
   },

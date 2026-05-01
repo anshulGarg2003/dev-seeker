@@ -4,9 +4,8 @@ import connectToDatabase from "@/database/mongoose";
 import { getSession } from "@/lib/auth";
 export async function UpdateUser(values) {
   const session = await getSession();
-  if (!session);
-  {
-    console.log("Your session has expired");
+  if (!session) {
+    throw new Error("Your session has expired");
   }
   const userId = session.user.id;
 
@@ -29,6 +28,4 @@ export async function UpdateUser(values) {
   } catch (err) {
     throw new Error("Error in updating the user");
   }
-
-  return;
 }

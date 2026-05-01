@@ -93,3 +93,30 @@ export async function DELETE(request, { params }) {
     );
   }
 }
+
+// PATCH request handler — update isLive status (used by sendBeacon on disconnect)
+export async function PATCH(request, { params }) {
+  await connectDB();
+  const { roomId } = params;
+
+  try {
+    const body = await request.json();
+    const room = await NewRoom.findById(roomId);
+    if (!room) {
+      return NextResponse.json({ error: "Room not found" }, { status: 404 });
+    }
+
+    if (typeof body.isLive === "boolean") {
+      room.isLive = body.isLive;
+      await room.save();
+    }
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error) {
+    console.error("Failed to update room:", error);
+    return NextResponse.json(
+      { error: "Failed to update room" },
+      { status: 500 }
+    );
+  }
+}

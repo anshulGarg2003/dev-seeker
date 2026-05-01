@@ -1,4 +1,3 @@
-"use server";
 import Testimonal from "@/database/model/Testimonal";
 import connectToDatabase from "@/database/mongoose";
 import { NextResponse } from "next/server";

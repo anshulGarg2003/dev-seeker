@@ -5,12 +5,16 @@ import { revalidatePath } from "next/cache";
 import mongoose from "mongoose"; // Import mongoose to use ObjectId
 import connectToDatabase from "@/database/mongoose";
 import NewUser from "@/database/model/user2";
+import { logActivity } from "@/lib/activity";
 
 export async function CreateRoomAction({
   name,
   description,
   language,
   githubrepo,
+  difficulty,
+  estimatedTime,
+  category,
 }) {
   // console.log({ name, description, language, githubrepo });
   const session = await getSession();
@@ -24,12 +28,10 @@ export async function CreateRoomAction({
 
     if (!existingUser) {
       throw new Error("User not found");
-      return;
     }
 
     if (existingUser.totalcoins < parseInt(process.env.ROOM_CREATE_COINS, 10)) {
       throw new Error("You don't have sufficient Coins.");
-      return;
     }
 
     const newRoom = await NewRoom.create({
@@ -37,6 +39,9 @@ export async function CreateRoomAction({
       description,
       language,
       githubrepo,
+      difficulty: difficulty || "medium",
+      estimatedTime: estimatedTime || "30min",
+      category: category || "bug-fix",
       userId: userId,
       userName: session.user.name,
       userProfile: session.user.image,
@@ -45,6 +50,9 @@ export async function CreateRoomAction({
     const savedRoomId = new mongoose.Types.ObjectId(savedroom._id);
 
     existingUser.rooms.push(savedRoomId);
+
+    // Log activity for contribution map
+    await logActivity(userId);
 
     existingUser.totalcoins -= parseInt(process.env.ROOM_CREATE_COINS, 10);
     const newTransaction = {

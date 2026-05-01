@@ -9,6 +9,9 @@ export async function EditRoomAction({
   description,
   language,
   githubrepo,
+  difficulty,
+  estimatedTime,
+  category,
   roomId,
 }) {
   const session = await getSession();
@@ -18,11 +21,14 @@ export async function EditRoomAction({
     // Convert userId to ObjectId
     const oldRoom = await NewRoom.findById(roomId);
 
-    if (oldRoom.userId == session.user.id) {
+    if (oldRoom.userId.toString() === session.user.id) {
       oldRoom.name = name;
       oldRoom.description = description;
       oldRoom.language = language;
       oldRoom.githubrepo = githubrepo;
+      oldRoom.difficulty = difficulty || "medium";
+      oldRoom.estimatedTime = estimatedTime || "30min";
+      oldRoom.category = category || "bug-fix";
 
       await oldRoom.save();
 

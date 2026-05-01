@@ -15,13 +15,13 @@ const CreateRoomButton = () => {
   };
 
   return (
-    <div className="flex justify-between px-10">
-      <h2>Having a problem in anything??</h2>
-      <Button onClick={handleClick}>
+    <div className="flex justify-between items-center px-10">
+      <h2 className="text-lg font-semibold text-foreground">Having a problem in anything?</h2>
+      <Button onClick={handleClick} className="rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white shadow-lg shadow-violet-600/20 border-0 px-6">
         {session ? (
           <Link href="/create-room">Create Room</Link>
         ) : (
-          "Create Room" // Display text if session is not present
+          "Create Room"
         )}
       </Button>
     </div>

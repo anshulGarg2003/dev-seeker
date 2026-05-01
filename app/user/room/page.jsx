@@ -5,7 +5,7 @@ import { MyRoomCard } from "./MyRoomCard";
 import toast from "react-hot-toast";
 import { DeleteRoom } from "./action";
 import CreateRoomButton from "@/components/Create-Form-Button";
-import Lottie from "lottie-react";
+import Lottie from "@/components/LottieWrapper";
 import Loading from "@/Loading.json";
 import Image from "next/image";
 import { useCallContext } from "@/context/CallContext";
@@ -57,7 +57,7 @@ const Page = () => {
         </div>
       ) : (
         <div className="flex flex-col gap-4 w-[80%]">
-          <p className="text-gray-500 text-[60px]">Your Rooms</p>
+          <p className="text-muted-foreground text-[60px]">Your Rooms</p>
           {rooms.length == 0 ? (
             <div className="flex items-center flex-col gap-4">
               <Image src={"/empty.svg"} width="300" height="300" alt="Empty" />
@@ -67,7 +67,7 @@ const Page = () => {
           ) : (
             <>
               <CreateRoomButton />
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {rooms.map((room) => (
                   <MyRoomCard
                     key={room._id}

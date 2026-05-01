@@ -14,6 +14,21 @@ const NewRoomSchema = new mongoose.Schema(
     githubrepo: {
       type: String,
     },
+    difficulty: {
+      type: String,
+      enum: ["easy", "medium", "hard"],
+      default: "medium",
+    },
+    estimatedTime: {
+      type: String,
+      enum: ["quick", "30min", "1hour", "2hours+"],
+      default: "30min",
+    },
+    category: {
+      type: String,
+      enum: ["bug-fix", "feature-help", "code-review", "architecture", "learning"],
+      default: "bug-fix",
+    },
     completed: {
       type: Boolean,
       required: true,
@@ -25,7 +40,7 @@ const NewRoomSchema = new mongoose.Schema(
       default: false,
     },
     userId: {
-      type: mongoose.Schema.Types.ObjectId, // Ensure this is an ObjectId to reference the User model
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
     userName: {

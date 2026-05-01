@@ -3,7 +3,6 @@ import NewUser from "@/database/model/user2";
 import connectToDatabase from "@/database/mongoose";
 import { getSession } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { NextResponse } from "next/server";
 
 export async function FetchFriends() {
   const session = await getSession();
@@ -26,10 +25,7 @@ export async function FetchFriends() {
 
     return { requests, friends, sendrequest };
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to fetch user data" },
-      { status: 500 }
-    );
+    throw new Error("Failed to fetch user data");
   }
 }
 
@@ -47,7 +43,7 @@ export const Accept = async (item) => {
     const user = await NewUser.findById(userId);
     const userItem = await NewUser.findById(item.friendId);
     if (!user || !userItem) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      throw new Error("User not found");
     }
 
     // Check if the item already exists in friends
@@ -96,7 +92,7 @@ export const Decline = async (item) => {
   try {
     const user = await NewUser.findById(userId);
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      throw new Error("User not found");
     }
 
     // Filter out the accepted friend request
@@ -127,7 +123,7 @@ export const RemoveRequest = async (item) => {
     const user = await NewUser.findById(userId);
     const userItem = await NewUser.findById(item.friendId);
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      throw new Error("User not found");
     }
 
     // Filter out the accepted friend request

@@ -34,7 +34,7 @@ export const sendComplete = async (roomInfo) => {
     // Convert userId to ObjectId
     const oldRoom = await NewRoom.findById(roomInfo);
 
-    if (oldRoom.userId == session.user.id) {
+    if (oldRoom.userId.toString() === session.user.id) {
       oldRoom.completed = true;
 
       await oldRoom.save();

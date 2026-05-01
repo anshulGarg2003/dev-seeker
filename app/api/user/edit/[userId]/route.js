@@ -7,13 +7,13 @@ export async function GET(request, { params }) {
   const { userId } = params;
   try {
     const user = await NewUser.findById(userId);
-    // if (!user) {
-    //   return NextResponse.json({ error: "User not found" }, { status: 404 });
-    // }
-    // return NextResponse.json(user, { status: 200 });
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+    return NextResponse.json(user, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch room" },
+      { error: "Failed to fetch user" },
       { status: 500 }
     );
   }

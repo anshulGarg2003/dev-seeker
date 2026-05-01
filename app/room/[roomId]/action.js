@@ -4,15 +4,31 @@ import NewRoom from "@/database/model/room2";
 import NewUser from "@/database/model/user2";
 import connectToDatabase from "@/database/mongoose";
 import { getSession } from "@/lib/auth";
-import { StreamChat } from "stream-chat";
+import jwt from "jsonwebtoken";
 
 export async function generateTokenAction() {
   const session = await getSession();
-  const apikey = process.env.NEXT_PUBLIC_GET_STREAM_API_KEY;
-  const secret = process.env.NEXT_PUBLIC_GET_STREAM_SECRET;
+  if (!session?.user?.id) {
+    throw new Error("Not authenticated");
+  }
+  const apiKey = process.env.NEXT_PUBLIC_GET_STREAM_API_KEY;
+  const secret = process.env.GET_STREAM_SECRET;
 
-  const serverClient = StreamChat.getInstance(apikey, secret);
-  const token = serverClient.createToken(session?.user?.id);
+  if (!apiKey || !secret) {
+    throw new Error("Stream credentials not configured");
+  }
+
+  const userId = String(session.user.id);
+  const now = Math.floor(Date.now() / 1000);
+
+  const token = jwt.sign(
+    {
+      user_id: userId,
+      iat: now,
+      exp: now + 60 * 60, // 1 hour
+    },
+    secret
+  );
 
   return token;
 }
@@ -26,7 +42,7 @@ export async function AddCoin(roomInfo, callSession) {
   await connectToDatabase();
   const Room = await NewRoom.findById(roomInfo);
 
-  if (Room.userId === session?.user?.id) {
+  if (Room.userId.toString() === session?.user?.id) {
     return;
   }
   const startTime = callSession.joinedAt.seconds * 1000; // Convert to milliseconds
@@ -41,7 +57,6 @@ export async function AddCoin(roomInfo, callSession) {
 
   if (!existingUser) {
     throw new Error("User not found");
-    return;
   }
   existingUser.totaltime += differenceInMinutes;
 
@@ -72,6 +87,7 @@ export async function AddCoin(roomInfo, callSession) {
 
 export async function OnAir(roomId, isPageVisible) {
   try {
+    await connectToDatabase();
     const room = await NewRoom.findById(roomId); // Await the findById method
     // console.log(room);
 

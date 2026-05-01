@@ -1,47 +1,65 @@
+"use client";
 import React, { useState } from "react";
+import { Star } from "lucide-react";
+
+const ratingLabels = [
+  "",
+  "Needs work",
+  "Could be better",
+  "Decent",
+  "Great session!",
+  "Outstanding!",
+];
+
+const ratingColors = [
+  "",
+  "text-red-400",
+  "text-orange-400",
+  "text-amber-400",
+  "text-yellow-400",
+  "text-emerald-400",
+];
 
 const StarRating = ({ changeRating }) => {
   const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
 
   const handleRating = (n) => {
     setRating(n);
     changeRating(n);
   };
 
-  const starClasses = () => {
-    if (rating == 1) {
-      return "text-red-500";
-    } else if (rating == 2) {
-      return "text-orange-500";
-    } else if (rating == 3) {
-      return "text-yellow-300";
-    } else if (rating == 4) {
-      return "text-yellow-400";
-    } else if (rating == 5) {
-      return "text-green-500";
-    } else {
-      return "";
-    }
-  };
+  const active = hover || rating;
 
   return (
-    <div className="max-w-lg mx-auto p-4 rounded-lg shadow-md">
-      <h1 className="text-2xl font-semibold mb-4 text-center">
-        Please rate our service
-      </h1>
-      <div className="flex justify-center mb-4">
+    <div className="space-y-3">
+      <div className="flex items-center justify-center gap-1.5">
         {[1, 2, 3, 4, 5].map((num) => (
-          <span
+          <button
             key={num}
+            type="button"
             onClick={() => handleRating(num)}
-            className={`text-6xl cursor-pointer ${
-              num <= rating ? starClasses() : ""
+            onMouseEnter={() => setHover(num)}
+            onMouseLeave={() => setHover(0)}
+            className={`p-1.5 rounded-lg transition-all duration-200 hover:scale-110 ${
+              num <= active
+                ? `${ratingColors[active]} scale-105`
+                : "text-muted-foreground/30 hover:text-muted-foreground/50"
             }`}
           >
-            ★
-          </span>
+            <Star
+              className="w-8 h-8 sm:w-9 sm:h-9"
+              fill={num <= active ? "currentColor" : "none"}
+              strokeWidth={1.5}
+            />
+          </button>
         ))}
       </div>
+      {active > 0 && (
+        <p className={`text-center text-sm font-medium ${ratingColors[active]} transition-colors`}>
+          {ratingLabels[active]}
+        </p>
+      )}
     </div>
   );
 };

@@ -8,16 +8,12 @@ import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "Dev-Seeker",
-  description: "An App that connect a devloper to a devloper",
+  description: "A platform that connects developers to solve problems together",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
-      </head>
       <body className={inter.className}>
         <NextTopLoader />
         <Providers>

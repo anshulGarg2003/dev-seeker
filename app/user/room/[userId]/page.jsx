@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { MyRoomCard } from "./MyRoomCard";
-import Lottie from "lottie-react";
+import Lottie from "@/components/LottieWrapper";
 import Loading from "@/Loading.json";
 import Image from "next/image";
 
@@ -41,8 +41,8 @@ const Page = (props) => {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          <p className="text-gray-500 text-[60px] text-center">
-            {rooms[0]?.userName}Rooms
+          <p className="text-muted-foreground text-[60px] text-center">
+            {rooms[0]?.userName}'s Rooms
           </p>
           {rooms.length === 0 ? (
             <div className="flex items-center flex-col gap-4">
@@ -51,7 +51,7 @@ const Page = (props) => {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {rooms.map((room) => (
                   <MyRoomCard
                     key={room._id}

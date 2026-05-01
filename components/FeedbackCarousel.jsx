@@ -6,6 +6,8 @@ const FeedbackCarousel = ({ feedbackData }) => {
   const [fade, setFade] = useState("animate-fadeIn");
 
   useEffect(() => {
+    if (!feedbackData || feedbackData.length === 0) return;
+
     const interval = setInterval(() => {
       setFade("animate-fadeOut");
       setTimeout(() => {
@@ -17,17 +19,25 @@ const FeedbackCarousel = ({ feedbackData }) => {
     return () => clearInterval(interval); // Cleanup on unmount
   }, [feedbackData.length]);
 
-  const item = feedbackData[currentIndex];
+  const item = feedbackData?.[currentIndex];
+
+  if (!feedbackData || feedbackData.length === 0) {
+    return (
+      <div className="py-10 flex justify-center items-center min-h-[250px]">
+        <p className="text-muted-foreground text-lg">No testimonials yet. Be the first to share!</p>
+      </div>
+    );
+  }
 
   return (
     <div className="py-10 flex justify-center items-center min-h-[250px]">
       <div className="max-w-screen-md w-[500px] text-center">
         <div className={`transition-opacity duration-1000 ease-in-out ${fade}`}>
-          <div className="flex justify-center items-center mb-4 text-yellow-300">
+          <div className="flex justify-center items-center mb-4 text-amber-400">
             {Array.from({ length: item?.star }).map((_, i) => (
               <svg
                 key={i}
-                className="w-5 h-5 me-1"
+                className="w-5 h-5 me-1 drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
@@ -38,7 +48,7 @@ const FeedbackCarousel = ({ feedbackData }) => {
             ))}
           </div>
           <blockquote>
-            <p className="text-2xl font-semibold text-gray-900 dark:text-white">
+            <p className="text-2xl font-bold text-foreground italic leading-relaxed">
               {item?.feedback}
             </p>
           </blockquote>
@@ -51,10 +61,10 @@ const FeedbackCarousel = ({ feedbackData }) => {
               />
             </Link>
             <div className="flex items-center divide-x-2 rtl:divide-x-reverse divide-gray-300 dark:divide-gray-700">
-              <cite className="pe-3 font-medium text-gray-900 dark:text-white">
+              <cite className="pe-3 font-medium text-foreground">
                 Developer {item?.userName}
               </cite>
-              <cite className="ps-3 text-sm text-gray-500 dark:text-gray-400">
+              <cite className="ps-3 text-sm text-muted-foreground">
                 Proud Contributor
               </cite>
             </div>

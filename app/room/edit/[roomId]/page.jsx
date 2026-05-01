@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { EditRoom } from "./edit-room";
 import Loading from "@/Loading.json";
-import Lottie from "lottie-react";
+import Lottie from "@/components/LottieWrapper";
 
 const page = (props) => {
   const [room, setRoom] = useState(null); // Initialize room state with null
